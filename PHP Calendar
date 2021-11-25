@@ -1,0 +1,234 @@
+<?php
+// Set your timezone
+    date_default_timezone_set('UTC');
+
+// Get prev & next month
+
+    if (isset($_GET['ym'])) {
+        $ym = $_GET['ym'];
+    }else{
+    // 
+        $ym = date('Y-m'); // Month
+}
+// Format
+        $timestamp = strtotime($ym . '-01');
+    if ($timestamp === false) {
+        $ym = date('Y-m');
+        $timestamp = strtotime($ym . '-01');
+}
+
+// Day
+        $today = date('Y-m-j', time());
+
+// For html title
+        $html_title = date('Y / m', $timestamp);
+
+// Create Prev & next month <h/m/s/m/d/y/>
+        $prev = date('Y-m', mktime(0, 0, 0, date('m', $timestamp) - 1, 1, date('Y', $timestamp)));
+        $next = date('Y-m', mktime(0, 0, 0, date('m', $timestamp) + 1, 1, date('Y', $timestamp)));
+
+// Number of days in the month
+        $day_count = date('t', $timestamp);
+
+// 0:S/1:M/2:T/
+        $str = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
+
+// Create Calendar
+        $weeks = array();
+        $week = '';
+
+//Add Cell
+        $week .= str_repeat('<td></td>', $str);
+
+    for ($day = 1; $day <= $day_count; $day++, $str++) {
+
+        $date = $ym . '-' . $day;
+
+    if ($today == $date) {
+        $week .= '<td class="today">' . $day;
+} else {
+        $week .= '<td>' . $day;
+}
+        $week .= '</td>';
+
+    // End of the week OR End of the month
+    if ($str % 7 == 6 || $day == $day_count) {
+
+    if ($day == $day_count) {
+            // Add cell
+        $week .= str_repeat('<td></td>', 6 - ($str % 7));
+        }
+
+        $weeks[] = '<tr>' . $week . '</tr>';
+
+        // ready for new week
+        $week = '';
+    }
+}
+// $January = 1; // Month
+// $February = 2; // Month
+// $March = 3; // Month
+// $April = 4; // Month
+// $May = 5; // Month
+// $June = 6; // Month
+// $July = 7; // Month
+// $August = 8; // Month
+// $September = 9; // Month
+// $October = 10; // Month
+// $November = 11; // Month
+// $December = 12; // Month
+//
+// $monthname = 0;
+//
+//
+//switch ($m) {
+//  case "1":
+// $m1 = "January";   
+// break;
+// Month 1 
+// case "2":
+// $m2 = "February";
+// break;
+// Month 2
+// case "3":
+// $m3 = "March";
+// break;
+// Month 3 
+//  case "4":
+// $m4 = "April";
+//  break;
+// Month 4
+// case "5":
+// $m5 = "May";
+// break;
+// Month 5
+//case "6":
+// $m6 = "June";
+// break;
+// Month 6
+//case "7":
+// $m7 = "July";
+// break;
+// Month 7
+// case "8":
+//  $m8 = "August";
+//  break;
+// Month 8
+// case "9":
+// $m9 = "September";
+// break;
+// Month 9
+//case "10":
+//  $m10 = "October";
+//  break;
+// Month 10
+// case "11":
+//  $m11 = "November";
+//   break;
+// Month 11
+// case "12":
+//  $m12 = "December";
+//  break;
+// Month 12
+//}
+//
+//
+/*
+ * Избери Месец
+ */
+// $m . .. .
+//function MonthList($selected = ''){ 
+//$options = ''; 
+// 
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Calendar</title>
+        <link href="https://fonts.googleapis.com/css?family=Georgia" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <style>
+            .container {
+                font: italic small-caps bold 12px/30px Georgia, serif;
+                margin-top: 40px;
+            }
+            h3 {
+                margin-bottom: 10px;
+            }
+            th {
+                height: 30px;
+                text-align: center;
+            }
+            td {
+                height: 20px;
+            }
+            .today {
+                background: #99ffcc;
+            }
+            th:nth-of-type(6), td:nth-of-type(6) {
+                color: red;
+            }
+            th:nth-of-type(7), td:nth-of-type(7) {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <center><font color="#181418" face="Georgia" size="10px">Calendar</font></center>
+            <h3><a href="?ym=<?php echo $prev; ?>">&larr;</a>
+                <?php echo $html_title; ?> 
+                <a href="?ym=<?php echo $next; ?>">&rarr;</a></h3>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Monday</th> 
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                </tr>
+                <div class="row">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                            <form class="row g-3">
+                                <div class="col-md-6 col-lg-6">
+                                <label class="form-label" for="MonthList">Select month</label>
+                                <select name="m" class="form-control" id="month">
+                                    <option value="?ym=<?php echo $m1; ?>">January</option>
+                                    <option value="?ym=<?php echo $m2; ?>">February</option>
+                                    <option value="?ym=<?php echo $m3; ?>">March</option>
+                                    <option value="?ym=<?php echo $m4; ?>">April</option>
+                                    <option value="?ym=<?php echo $m5; ?>">May</option>
+                                    <option value="?ym=<?php echo $m6; ?>">June</option>
+                                    <option value="?ym=<?php echo $m7; ?>">July</option>
+                                    <option value="?ym=<?php echo $m8; ?>">August</option>
+                                    <option value="?ym=<?php echo $m9; ?>">September</option>
+                                    <option value="?ym=<?php echo $m10; ?>">October</option>
+                                    <option selected value="?ym=<?php echo $m11; ?>">November</option>
+                                    <option value="?ym=<?php echo $m12; ?>">December</option>
+                                </select>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
+                                    <label class="form-label" for="year">Year:</label>
+                                    <input type="text" name="y" class="form-control" value="2021">
+                                </div>
+                                <div class="col-md-12 col-lg-12">
+                                    <button type="submit" class="btn btn-primary">Show</button>
+                                    <a href="" class="btn btn-secondary">Today</a>          
+                                </div>
+                <?php
+                      foreach ($weeks as $week) {
+                               echo $week;
+                           }
+                ?>
+             </table>
+          </div>
+       </body>
+</html>
